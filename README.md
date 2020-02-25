@@ -8,7 +8,7 @@ vm = VM()
 print(json.dumps(vm.info('kube-2'), indent=4, sort_keys=True))
 ```
 
-```bash
+```json
 {
     "arch": "x86_64",
     "cpuModel": "Broadwell-IBRS",
