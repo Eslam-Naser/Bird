@@ -67,12 +67,39 @@ class VM:
         list = connection.listDefinedDomains()
         return list
 
+    def exists(self):
+        list = connection.listDefinedDomains()
+        print(list)
+
     def info(self, vm_name, connection=connection):
         from xml.dom import minidom
         info = {}
         vm_ = connection.lookupByName(vm_name)
         if vm_ == None:
             print('Failed to find the domain ' + vm_name, file=sys.stderr)
+            exit(1)
+
+        state, reason = vm_.state()
+        if state == libvirt.VIR_DOMAIN_NOSTATE:
+            info['state'] = 'noState'
+        elif state == libvirt.VIR_DOMAIN_RUNNING:
+            info['state'] = 'running'
+        elif state == libvirt.VIR_DOMAIN_BLOCKED:
+            info['state'] = 'blocked'
+        elif state == libvirt.VIR_DOMAIN_PAUSED:
+            info['state'] = 'paused'
+        elif state == libvirt.VIR_DOMAIN_SHUTDOWN:
+            info['state'] = 'shutdown'
+        elif state == libvirt.VIR_DOMAIN_SHUTOFF:
+            info['state'] = 'shutoff'
+        elif state == libvirt.VIR_DOMAIN_CRASHED:
+            info['state'] = 'crashed'
+        elif state == libvirt.VIR_DOMAIN_PMSUSPENDED:
+            info['state'] = 'pmSuspended'
+        else:
+            info['state'] = 'unknown'
+            #print('The reason code is ' + str(reason))
+
 
         raw_xml = vm_.XMLDesc(0)
         xml = minidom.parseString(raw_xml)
@@ -81,10 +108,17 @@ class VM:
         info['vcpu'] = (xml.getElementsByTagName('vcpu')[0].firstChild.data)
         info['name'] = (xml.getElementsByTagName('name')[0].firstChild.data)
         info['uuid'] = (xml.getElementsByTagName('uuid')[0].firstChild.data)
+        info['memoryStatus']    = vm_.memoryStats()
         info['emulator']   = (xml.getElementsByTagName('emulator')[0].firstChild.data)
         info['cpuModel']   = (xml.getElementsByTagName('model')[0].firstChild.data)
         info['disks']      = []
         info['interfaces'] = []
+
+        id = vm_.ID()
+        if id == -1:
+            info['id'] = ''
+        else:
+            info['id'] = str(vm_.ID())
 
         os = xml.getElementsByTagName('type')
         for o in os:
@@ -127,10 +161,10 @@ class VM:
 
 vm = VM()
 #print(vm.list())
-#print(vm.info('kube-2'))
+print(vm.info('kube-2'))
 #print(vm.info('kube-2').get('disks')[0])
 #(vm.info('kube-2').get('interfaces'))
 #print(vm.info('kube-2').get('vncPort'))
 
-print(json.dumps(vm.info('kube-2'), indent=4, sort_keys=True))
+#print(json.dumps(vm.info('kube-2'), indent=4, sort_keys=True))
 
