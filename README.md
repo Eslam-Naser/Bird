@@ -40,6 +40,7 @@ print(json.dumps(vm.info('kube-2'), indent=4, sort_keys=True))
         }
     ],
     "emulator": "/usr/bin/kvm-spice",
+    "id": "90",
     "interfaces": [
         {
             "address": "52:54:00:fa:ba:cb",
@@ -69,7 +70,18 @@ print(json.dumps(vm.info('kube-2'), indent=4, sort_keys=True))
         }
     ],
     "memory": "4194304",
+    "memoryStatus": {
+        "actual": 4194304,
+        "available": 4042772,
+        "major_fault": 0,
+        "minor_fault": 0,
+        "rss": 830704,
+        "swap_in": 0,
+        "swap_out": 0,
+        "unused": 3977396
+    },
     "name": "kube-2",
+    "state": "running",
     "uuid": "26248c44-f414-493e-a60f-743e2e3b30e3",
     "vcpu": "4",
     "vncListenAddress": "127.0.0.1",

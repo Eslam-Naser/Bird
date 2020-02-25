@@ -161,10 +161,10 @@ class VM:
 
 vm = VM()
 #print(vm.list())
-print(vm.info('kube-2'))
+#print(vm.info('kube-2'))
 #print(vm.info('kube-2').get('disks')[0])
 #(vm.info('kube-2').get('interfaces'))
 #print(vm.info('kube-2').get('vncPort'))
 
-#print(json.dumps(vm.info('kube-2'), indent=4, sort_keys=True))
+print(json.dumps(vm.info('kube-2'), indent=4, sort_keys=True))
 
