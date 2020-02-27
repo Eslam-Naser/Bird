@@ -10,3 +10,6 @@ class Host:
     def info(self):
         pass
 
+    def metrics(self):
+        pass
+
