@@ -76,8 +76,11 @@ class VM:
 
         os = xml.getElementsByTagName('graphics')
         for o in os:
-            info['vncPort'] = o.getAttribute('port')
-            info['vncListenAddress'] = o.getAttribute('listen')
+            info['graphicsType'] = o.getAttribute('type')
+            info['graphicsPort'] = o.getAttribute('port')
+            info['graphicsAutoport'] = o.getAttribute('autoport')
+            info['graphicsListenAddress'] = o.getAttribute('listen')
+            info['graphicsConnectionString'] = 'spice://' + info['graphicsListenAddress'] +':' + info['graphicsPort']
 
         disk_types = (xml.getElementsByTagName('disk'))
         for disk in disk_types:
