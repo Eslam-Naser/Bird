@@ -10,8 +10,11 @@ class Main:
     def __init__(self):
         pass
 
-    def connection(self, qemu_connection='qemu:///system'):
-        conn = libvirt.open(qemu_connection)
+    def connection(self, qemu_connection='localhost'):
+        if qemu_connection == 'localhost':
+            qemu_connection = 'system'
+        connection = 'qemu:///' + qemu_connection
+        conn = libvirt.open(connection)
         if conn is None:
             sys.stderr.write('Failed to open connection to: ' + qemu_connection)
             exit(1)
@@ -32,9 +35,8 @@ class Main:
         info['stderr'] = std_err.rstrip()
         ## Python's rstrip() method
         # strips all kinds of trailing whitespace by default, not just one newline
-
         return info
-    # print(main.runcommand('ip a'))
+
 
 
 class Namespace:
@@ -53,3 +55,6 @@ class Namespace:
         pass
 
 
+## Examples
+
+# print(main.runcommand('ip a'))

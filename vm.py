@@ -8,23 +8,21 @@ class VM:
     Class for vm operations
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, connection=Main().connection()):
+        self.connection = connection
 
-    connection = Main().connection()
-
-    def list(self, connection=connection):
-        list = connection.listDefinedDomains()
+    def list(self):
+        list = self.connection.listDefinedDomains()
         return list
 
     def exists(self):
-        list = connection.listDefinedDomains()
+        list = self.connection.listDefinedDomains()
         print(list)
 
-    def info(self, vm_name, connection=connection):
+    def info(self, vm_name):
         from xml.dom import minidom
         info = {}
-        vm_ = connection.lookupByName(vm_name)
+        vm_ = self.connection.lookupByName(vm_name)
         if vm_ == None:
             print('Failed to find the domain ' + vm_name, file=sys.stderr)
             exit(1)
