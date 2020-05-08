@@ -1,8 +1,7 @@
 from main import Main
+from facter import facter
 import libvirt
 import json
-
-
 
 
 class Host:
@@ -11,24 +10,9 @@ class Host:
 
     def info(self):
         info = {}
-        info['hostname']   = self.connection.getHostname()
-        info['maxVcpu']    = self.connection.getMaxVcpus(None)
+        info.update(facter())
         info['model']      = self.connection.getInfo()[0]
-        info['memorySize'] = str(self.connection.getInfo()[1])+'MB'
-        info['numberOfCPUs']       = self.connection.getInfo()[2]
-        info['mhzOfCPUs']          = self.connection.getInfo()[3]
-        info['numberOfNUMANodes']  = self.connection.getInfo()[4]
-        info['numberOfCPUSockets'] = self.connection.getInfo()[5]
-        info['numberOfCPUCoresPerSocket'] = self.connection.getInfo()[6]
-        info['numberOfCPUThreadsPerCore'] = self.connection.getInfo()[7]
-        info['cellsFreeMemory'] = {}
-        CellsFreeMemory = self.connection.getCellsFreeMemory(0, info['numberOfNUMANodes'])
-        cell = 0
-        for cellfreemem in CellsFreeMemory:
-            info['cellsFreeMemory']['Node-' + str(cell)] = str(cellfreemem) + ' bytes free memory'
-            cell += 1
         info['virtualizationType']    = self.connection.getType()
-        info['version']               = str(self.connection.getVersion())
         info['libVersion']            = str(self.connection.getLibVersion())
         info['canonicalURI']          = self.connection.getURI()
         encrypted = self.connection.isEncrypted()
@@ -53,28 +37,10 @@ class Host:
         else:
             info['isConnectionAlive'] = 'unknown'
 
-        # did not use this:
-        # https://libvirt.org/docs/libvirt-appdev-guide-python/en-US/html/ch03s04s12.html
-
-        info['freeMemory'] = self.connection.getFreeMemory()
-        pages = [2048]
-        start = 0
-        cellcount = 4
-        info['freePages']     = self.connection.getFreePages(pages, start, cellcount)
-        info['securityModel'] = self.connection.getSecurityModel()[0] + ' '  + str(self.connection.getSecurityModel()[1])
-        info['CPUs'] = self.connection.getCPUMap()[0]
-        info['CPUStats'] = {}
-        info['CPUStats']['kernel'] = str(self.connection.getCPUStats(0)['kernel'])
-        info['CPUStats']['idle'] = str(self.connection.getCPUStats(0)['idle'])
-        info['CPUStats']['user'] = str(self.connection.getCPUStats(0)['user'])
-        info['CPUStats']['iowait'] = str(self.connection.getCPUStats(0)['iowait'])
-
-        from xml.dom import minidom
+        #from xml.dom import minidom
         #xml = self.connection.getSysinfo()
         #xml_ = minidom.parseString(xml)
         #print(xml)
-
-
 
         self.connection.close()
         return info

@@ -58,7 +58,7 @@ class VM:
         info['uuid'] = (xml.getElementsByTagName('uuid')[0].firstChild.data)
         info['memoryStatus']    = vm_.memoryStats()
         info['emulator']   = (xml.getElementsByTagName('emulator')[0].firstChild.data)
-        #info['cpuModel']   = (xml.getElementsByTagName('model')[0].firstChild)  ## Needs to be fixed
+        info['cpuModel']   = (xml.getElementsByTagName('model').firstChild.data)
         info['disks']      = []
         info['interfaces'] = []
 
@@ -106,6 +106,9 @@ class VM:
         # https://libvirt.org/docs/libvirt-appdev-guide-python/en-US/html/libvirt_application_development_guide_using_python-Guest_Domains-Device_Config.html
         return info
 
+    def metrics(self):
+        pass
+
 ### Examples ###
 
 
@@ -116,5 +119,7 @@ vm = VM()
 #(vm.info('kube-2').get('interfaces'))
 #print(vm.info('kube-2').get('vncPort'))
 
-print(json.dumps(vm.info('CentOS-7-1907'), indent=4, sort_keys=True))
+#print(json.dumps(vm.info('CentOS-7-1907'), indent=4, sort_keys=True))
+
+print(vm.info('CentOS-7-1907'))
 
